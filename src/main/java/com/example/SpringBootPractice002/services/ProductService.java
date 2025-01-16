@@ -1,8 +1,11 @@
 package com.example.SpringBootPractice002.services;
 
+import com.example.SpringBootPractice002.exceptions.ProductNotFoundException;
 import com.example.SpringBootPractice002.models.Product;
 import com.example.SpringBootPractice002.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +22,13 @@ public class ProductService {
     }
 
     // get all products
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     // get a product by id
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     // delete a product by id
